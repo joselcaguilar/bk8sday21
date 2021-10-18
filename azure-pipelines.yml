@@ -20,20 +20,19 @@ stages:
     steps:
     - checkout: self
 
-    - task: Docker@2
+    - task: CmdLine@2
       displayName: Build the Python v3.4 image
       inputs:
-        command: 'build'
-        Dockerfile: '**/dockerFileOld'
-        buildContext: '$(Build.SourcesDirectory)/dockerFiles/'
-        tags: '3.4-$(Build.BuildNumber)'
-    - task: Docker@2
+        workingDirectory: $(Build.SourcesDirectory)/dockerFiles
+        script: |
+            docker build -t python:3.4-$(Build.BuildNumber) -f dockerFileOld .
+
+    - task: CmdLine@2
       displayName: Build the latest Python image
       inputs:
-        command: 'build'
-        Dockerfile: '**/dockerFile'
-        buildContext: '$(Build.SourcesDirectory)/dockerFiles'
-        tags: 'latest-$(Build.BuildNumber)'
+        workingDirectory: $(Build.SourcesDirectory)/dockerFiles
+        script: |
+            docker build -t python:latest-$(Build.BuildNumber) -f dockerFile .
 
     - task: CmdLine@2
       displayName: "Run trivy scan for Python 3.4 image"
