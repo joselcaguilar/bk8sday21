@@ -38,10 +38,10 @@ stages:
       displayName: "Run trivy scan for Python 3.4 image"
       inputs:
         script: |
-            docker run ghcr.io/aquasecurity/trivy:$(trivyVersion) image $(imageName):3.4-$(Build.BuildNumber)
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/aquasecurity/trivy:$(trivyVersion) image $(imageName):3.4-$(Build.BuildNumber)
 
     - task: CmdLine@2
       displayName: "Run trivy scan for latest Python image"
       inputs:
         script: |
-            docker run ghcr.io/aquasecurity/trivy:$(trivyVersion) image $(imageName):latest-$(Build.BuildNumber)
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/aquasecurity/trivy:$(trivyVersion) image $(imageName):latest-$(Build.BuildNumber)
