@@ -6,8 +6,8 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  trivyVersion: 0.20.1
   imageName: python
+  trivyVersion: 0.20.1
 
 stages:
 - stage: Build
@@ -25,23 +25,23 @@ stages:
       inputs:
         workingDirectory: $(Build.SourcesDirectory)/dockerFiles
         script: |
-            docker build -t python:3.4-$(Build.BuildNumber) -f dockerFileOld .
+            docker build -t $(imageName):3.4-$(Build.BuildNumber) -f dockerFileOld .
 
     - task: CmdLine@2
       displayName: Build the latest Python image
       inputs:
         workingDirectory: $(Build.SourcesDirectory)/dockerFiles
         script: |
-            docker build -t python:latest-$(Build.BuildNumber) -f dockerFile .
+            docker build -t $(imageName):latest-$(Build.BuildNumber) -f dockerFile .
 
     - task: CmdLine@2
       displayName: "Run trivy scan for Python 3.4 image"
       inputs:
         script: |
-            docker run ghcr.io/aquasecurity/trivy:latest image 3.4-$(Build.BuildNumber)
+            docker run ghcr.io/aquasecurity/trivy:$(trivyVersion) image $(imageName):3.4-$(Build.BuildNumber)
 
     - task: CmdLine@2
       displayName: "Run trivy scan for latest Python image"
       inputs:
         script: |
-            docker run ghcr.io/aquasecurity/trivy:latest image latest-$(Build.BuildNumber)
+            docker run ghcr.io/aquasecurity/trivy:$(trivyVersion) image $(imageName):latest-$(Build.BuildNumber)
