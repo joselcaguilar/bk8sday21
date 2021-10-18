@@ -35,23 +35,14 @@ stages:
         buildContext: '$(Build.SourcesDirectory)/dockerFiles'
         tags: 'latest-$(Build.BuildNumber)'
 
-    - script: |
-        sudo apt-get install rpm
-        wget https://github.com/aquasecurity/trivy/releases/download/v$(trivyVersion)/trivy_$(trivyVersion)_Linux-64bit.deb
-        sudo dpkg -i trivy_$(trivyVersion)_Linux-64bit.deb
-        trivy -v
-      displayName: 'Download and install Trivy'
-
     - task: CmdLine@2
       displayName: "Run trivy scan for Python 3.4 image"
       inputs:
         script: |
-            trivy image --exit-code 0 --severity LOW,MEDIUM python:3.4-$(Build.BuildNumber)
-            trivy image --exit-code 1 --severity HIGH,CRITICAL python:3.4-$(Build.BuildNumber)
+            docker run ghcr.io/aquasecurity/trivy:latest image 3.4-$(Build.BuildNumber)
 
     - task: CmdLine@2
       displayName: "Run trivy scan for latest Python image"
       inputs:
         script: |
-            trivy image --exit-code 0 --severity LOW,MEDIUM python:latest-$(Build.BuildNumber)
-            trivy image --exit-code 1 --severity HIGH,CRITICAL python:latest-$(Build.BuildNumber)
+            docker run ghcr.io/aquasecurity/trivy:latest image latest-$(Build.BuildNumber)
