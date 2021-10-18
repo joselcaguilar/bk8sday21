@@ -1,4 +1,5 @@
 trigger:
+- develop
 - main
 
 pool:
@@ -24,14 +25,14 @@ stages:
       inputs:
         command: 'build'
         Dockerfile: '**/dockerFileOld'
-        buildContext: '$(Build.SourcesDirectory)/src/'
+        buildContext: '$(Build.SourcesDirectory)/dockerFiles/'
         tags: '3.4-$(Build.BuildNumber)'
     - task: Docker@2
       displayName: Build the latest Python image
       inputs:
         command: 'build'
         Dockerfile: '**/dockerFile'
-        buildContext: '$(Build.SourcesDirectory)/src/'
+        buildContext: '$(Build.SourcesDirectory)/dockerFiles'
         tags: 'latest-$(Build.BuildNumber)'
 
     - script: |
