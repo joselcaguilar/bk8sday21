@@ -38,19 +38,19 @@ stages:
       displayName: "Run trivy scan for Python 3.4 image"
       inputs:
         script: |
-            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/aquasecurity/trivy:$(trivyVersion) image $(imageName):3.4-$(Build.BuildNumber)
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/aquasecurity/trivy:$(trivyVersion) image $(imageName):3.4-$(Build.BuildNumber) --format template --template "@templates/junit.tpl" -o junit-report-PythonOld.xml $(imageName):$(tag)
 
     - task: CmdLine@2
       displayName: "Run trivy scan for latest Python image"
       inputs:
         script: |
-            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/aquasecurity/trivy:$(trivyVersion) image $(imageName):latest-$(Build.BuildNumber)
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/aquasecurity/trivy:$(trivyVersion) image $(imageName):latest-$(Build.BuildNumber) --format template --template "@templates/junit.tpl" -o junit-report-PythonLatest.xml $(imageName):$(tag)
 
     - task: PublishTestResults@2
       displayName: "Publish tests from the Python v3.4 image"
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: '**/junit-report-high-crit.xml'
+        testResultsFiles: '**/junit-report-PythonOld.xml'
         mergeTestResults: true
         failTaskOnFailedTests: false
         testRunTitle: 'Trivy - High and Critical Vulnerabilities'
@@ -60,7 +60,7 @@ stages:
       displayName: "Publish tests from the latest Python image"
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: '**/junit-report-high-crit.xml'
+        testResultsFiles: '**/junit-report-PythonLatest.xml'
         mergeTestResults: true
         failTaskOnFailedTests: true
         testRunTitle: 'Trivy - High and Critical Vulnerabilities'
