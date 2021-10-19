@@ -53,7 +53,7 @@ stages:
             --severity low,medium,high,CRITICAL \
             --format template \
             --template "$(Build.SourcesDirectory)/junit.tpl" \
-            -o "$(Build.SourcesDirectory)/junit-report-PythonOld.xml" image $(imageName):latest-$(Build.BuildNumber)
+            -o "$(Build.SourcesDirectory)/junit-report-PythonLatest.xml" image $(imageName):latest-$(Build.BuildNumber)
 
     - task: PublishTestResults@2
       displayName: "Publish tests from the Python v3.4 image"
