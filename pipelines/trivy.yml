@@ -1,6 +1,7 @@
 trigger:
 - develop
 - main
+- publish
 
 pool:
   vmImage: ubuntu-latest
