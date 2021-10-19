@@ -55,7 +55,7 @@ stages:
             --severity low,medium,high,CRITICAL \
             --format template \
             --template "$(Build.SourcesDirectory)/junit.tpl" \
-            -o "$(Build.SourcesDirectory)/junit-report-PythonOld.xml" image $(imageName):latest-$(Build.BuildNumber)
+            -o "/home/vsts/work/1/s/junit-report-PythonLatest.xml" image $(imageName):latest-$(Build.BuildNumber)
 
     - task: PublishTestResults@2
       displayName: "Publish tests from the Python v3.4 image"
@@ -71,7 +71,7 @@ stages:
       displayName: "Publish tests from the latest Python image"
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: '**/junit-report-PythonLatest.xml'
+        testResultsFiles: '/home/vsts/work/1/s/junit-report-PythonLatest.xml'
         mergeTestResults: true
         failTaskOnFailedTests: true
         testRunTitle: 'Trivy - Latest Python image  Vulnerabilities'
