@@ -42,14 +42,18 @@ stages:
             --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/aquasecurity/trivy:$(trivyVersion) \
             --severity low,medium,high,CRITICAL \
             --format template \
-            --template "@templates/junit.tpl" \
-            -o junit-report-PythonOld.xml image $(imageName):3.4-$(Build.BuildNumber)
+            --template "$(Build.SourcesDirectory)/junit.tpl" \
+            -o "$(Build.SourcesDirectory)/junit-report-PythonOld.xml image $(imageName):3.4-$(Build.BuildNumber)
 
     - task: CmdLine@2
       displayName: "Run trivy scan for latest Python image"
       inputs:
         script: |
-            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/aquasecurity/trivy:$(trivyVersion) image $(imageName):latest-$(Build.BuildNumber)
+            --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/aquasecurity/trivy:$(trivyVersion) \
+            --severity low,medium,high,CRITICAL \
+            --format template \
+            --template "$(Build.SourcesDirectory)/junit.tpl" \
+            -o "$(Build.SourcesDirectory)/junit-report-PythonOld.xml" image $(imageName):latest-$(Build.BuildNumber)
 
     - task: PublishTestResults@2
       displayName: "Publish tests from the Python v3.4 image"
