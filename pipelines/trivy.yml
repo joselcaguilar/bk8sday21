@@ -43,7 +43,7 @@ stages:
             --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/aquasecurity/trivy:$(trivyVersion) \
             --severity low,medium,high,CRITICAL \
             --format template \
-            --template "$(Build.SourcesDirectory)/junit.tpl" \
+            --template "@templates/junit.tpl" \
             -o "$(Build.SourcesDirectory)/junit-report-PythonOld.xml" image $(imageName):3.4-$(Build.BuildNumber)
 
     - task: CmdLine@2
