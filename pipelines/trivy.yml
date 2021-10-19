@@ -44,7 +44,7 @@ stages:
             --severity low,medium,high,CRITICAL \
             --format template \
             --template "@templates/junit.tpl" \
-            -o "$(Build.SourcesDirectory)/junit-report-PythonOld.xml" image $(imageName):3.4-$(Build.BuildNumber)
+            -o "$(Build.SourcesDirectory)/dockerFiles/junit-report-PythonOld.xml" image $(imageName):3.4-$(Build.BuildNumber)
 
     - task: CmdLine@2
       displayName: "Run trivy scan for latest Python image"
