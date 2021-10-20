@@ -26,14 +26,14 @@ stages:
       inputs:
         workingDirectory: $(Build.SourcesDirectory)/dockerFiles
         script: |
-            docker build -t $(imageName):3.4-$(Build.BuildNumber) -f dockerFileOld . && docker scan $(imageName):3.4-$(Build.BuildNumber)
+            docker build -t $(imageName):3.4-$(Build.BuildNumber) -f dockerFileOld .
 
     - task: CmdLine@2
       displayName: Build the latest Python image
       inputs:
         workingDirectory: $(Build.SourcesDirectory)/dockerFiles
         script: |
-            docker build -t $(imageName):latest-$(Build.BuildNumber) -f dockerFile . && docker scan $(imageName):latest-$(Build.BuildNumber
+            docker build -t $(imageName):latest-$(Build.BuildNumber) -f dockerFile .
 
     - task: CmdLine@2
       displayName: "Run trivy scan for Python 3.4 image"
@@ -78,3 +78,24 @@ stages:
         failTaskOnFailedTests: true
         testRunTitle: 'Trivy - Latest Python image  Vulnerabilities'
       condition: 'always()'
+
+    - task: CmdLine@2
+      displayName: Install docker scan
+      inputs:
+        workingDirectory: $(Build.SourcesDirectory)/dockerFiles
+        script: |
+            sudo apt install docker-scan-plugin
+
+    - task: CmdLine@2
+      displayName: Scan the Python v3.4 image with Snyk
+      inputs:
+        workingDirectory: $(Build.SourcesDirectory)/dockerFiles
+        script: |
+            docker scan $(imageName):3.4-$(Build.BuildNumber)
+
+    - task: CmdLine@2
+      displayName: Scan the Python latest version image with Snyk
+      inputs:
+        workingDirectory: $(Build.SourcesDirectory)/dockerFiles
+        script: |
+            docker scan $(imageName):latest-$(Build.BuildNumber)
