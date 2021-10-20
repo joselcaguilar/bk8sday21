@@ -84,11 +84,11 @@ stages:
       inputs:
         workingDirectory: $(Build.SourcesDirectory)/dockerFiles
         script: |
-            docker scan -f DockerfileOld $(imageName):3.4-$(Build.BuildNumber)
+            docker scan $(imageName):3.4-$(Build.BuildNumber)
 
     - task: CmdLine@2
       displayName: Scan the Python latest version image with Snyk
       inputs:
         workingDirectory: $(Build.SourcesDirectory)/dockerFiles
         script: |
-            docker scan -f Dockerfile $(imageName):latest-$(Build.BuildNumber)
+            docker scan $(imageName):latest-$(Build.BuildNumber)
