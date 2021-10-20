@@ -9,7 +9,7 @@ pool:
 variables:
   imageName: python
   trivyVersion: 0.20.1
-  registry: BK8SDay
+  registry: BK8SDayACR
 
 stages:
 - stage: Build
