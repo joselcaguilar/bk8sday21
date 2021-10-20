@@ -85,16 +85,16 @@ stages:
         serviceConnectionEndpoint: 'Snyk-josunefon'
         testType: 'container'
         dockerImageName: "$(imageName):3.4-$(Build.BuildNumber)"
-        dockerfilePath: 'Dockerfile'
+        dockerfilePath: '$(Build.SourcesDirectory)/dockerFiles'
         failOnIssues: false
         monitorWhen: 'always'
 
     - task: SnykSecurityScan@1
-      displayName: "Snyk scan to old python image"
+      displayName: "Snyk scan to latest python image"
       inputs:
         serviceConnectionEndpoint: 'Snyk-josunefon'
         testType: 'container'
         dockerImageName: "$(imageName):latest-$(Build.BuildNumber)"
-        dockerfilePath: 'Dockerfile'
+        dockerfilePath: '$(Build.SourcesDirectory)/dockerFiles'
         failOnIssues: false
         monitorWhen: 'always'
