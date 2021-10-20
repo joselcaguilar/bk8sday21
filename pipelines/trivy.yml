@@ -79,22 +79,16 @@ stages:
         testRunTitle: 'Trivy - Latest Python image  Vulnerabilities'
       condition: 'always()'
 
-    - task: SnykSecurityScan@1
-      displayName: "Snyk scan to old python image"
+    - task: CmdLine@2
+      displayName: Scan the Python v3.4 image with Snyk
       inputs:
-        serviceConnectionEndpoint: 'Snyk-josunefon'
-        testType: 'container'
-        dockerImageName: "$(imageName):3.4-$(Build.BuildNumber)"
-        dockerfilePath: '$(Build.SourcesDirectory)/dockerFiles'
-        failOnIssues: false
-        monitorWhen: 'always'
+        workingDirectory: $(Build.SourcesDirectory)/dockerFiles
+        script: |
+            docker scan -f DockerfileOld $(imageName):3.4-$(Build.BuildNumber)
 
-    - task: SnykSecurityScan@1
-      displayName: "Snyk scan to latest python image"
+    - task: CmdLine@2
+      displayName: Scan the Python latest version image with Snyk
       inputs:
-        serviceConnectionEndpoint: 'Snyk-josunefon'
-        testType: 'container'
-        dockerImageName: "$(imageName):latest-$(Build.BuildNumber)"
-        dockerfilePath: '$(Build.SourcesDirectory)/dockerFiles'
-        failOnIssues: false
-        monitorWhen: 'always'
+        workingDirectory: $(Build.SourcesDirectory)/dockerFiles
+        script: |
+            docker scan -f Dockerfile $(imageName):latest-$(Build.BuildNumber)
