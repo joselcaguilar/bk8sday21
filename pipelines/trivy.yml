@@ -82,9 +82,11 @@ stages:
     - task: CmdLine@2
       displayName: Install docker scan
       inputs:
-        workingDirectory: $(Build.SourcesDirectory)/dockerFiles
         script: |
-            sudo apt install docker-scan-plugin
+          mkdir -p ~/.docker/cli-plugins && \
+          curl https://github.com/docker/scan-cli-plugin/releases/latest/download/docker-scan_linux_amd64 -L -s -S -o ~/.docker/cli-plugins/docker-scan &&\
+          chmod +x ~/.docker/cli-plugins/docker-scan |
+          sudo apt install docker-scan-plugin
 
     - task: CmdLine@2
       displayName: Scan the Python v3.4 image with Snyk
