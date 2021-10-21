@@ -58,8 +58,7 @@ stages:
             --format template \
             --template "@templates/junit.tpl" \
             -o "$(Build.SourcesDirectory)/junit-report-PythonLatest.xml" image $(imageName):latest-$(Build.BuildNumber)
-            write-host "######### Trivy scan for latest Python image is completed #########"
-            pwd
+            ls
 
     - task: PublishTestResults@2
       displayName: "Publish tests from the Python v3.4 image"
