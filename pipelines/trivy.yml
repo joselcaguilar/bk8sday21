@@ -45,7 +45,7 @@ stages:
             --severity low,medium,high,CRITICAL \
             --format template \
             --template "@templates/junit.tpl" \
-            -o "$(Build.SourcesDirectory)/dockerFiles/junit-report-PythonOld.xml" image $(imageName):3.4-$(Build.BuildNumber)
+            -o "$(Build.SourcesDirectory)/junit-report-PythonOld.xml" image $(imageName):3.4-$(Build.BuildNumber)
 
     - task: CmdLine@2
       displayName: "Run trivy scan for latest Python image"
@@ -56,8 +56,8 @@ stages:
             --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/aquasecurity/trivy:$(trivyVersion) \
             --severity low,medium,high,CRITICAL \
             --format template \
-            --template "$(Build.SourcesDirectory)/junit.tpl" \
-            -o "$(Build.SourcesDirectory)/dockerFiles/junit-report-PythonLatest.xml" image $(imageName):latest-$(Build.BuildNumber)
+            --template "@templates/junit.tpl" \
+            -o "$(Build.SourcesDirectory)/junit-report-PythonLatest.xml" image $(imageName):latest-$(Build.BuildNumber)
             write-host "######### Trivy scan for latest Python image is completed #########"
             pwd
 
