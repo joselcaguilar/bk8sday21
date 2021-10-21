@@ -46,6 +46,7 @@ stages:
             --format template \
             --template "@contrib/junit.tpl" \
             -o junit-report-PythonOld.xml image $(imageName):3.4-$(Build.BuildNumber)
+            ls
 
     - task: CmdLine@2
       displayName: "Run trivy scan for latest Python image"
