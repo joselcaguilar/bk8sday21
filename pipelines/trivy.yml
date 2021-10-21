@@ -38,6 +38,7 @@ stages:
     - task: CmdLine@2
       displayName: "Run trivy scan for Python 3.4 image"
       inputs:
+        workingDirectory: $(Build.SourcesDirectory)
         script: |
             docker run \
             --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/aquasecurity/trivy:$(trivyVersion) \
@@ -49,6 +50,7 @@ stages:
     - task: CmdLine@2
       displayName: "Run trivy scan for latest Python image"
       inputs:
+        workingDirectory: $(Build.SourcesDirectory)
         script: |
             docker run \
             --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/aquasecurity/trivy:$(trivyVersion) \
@@ -63,7 +65,7 @@ stages:
       displayName: "Publish tests from the Python v3.4 image"
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: "$(Build.SourcesDirectory)/dockerFiles/junit-report-PythonOld.xml"
+        testResultsFiles: "$(Build.SourcesDirectory)/junit-report-PythonOld.xml"
         mergeTestResults: true
         failTaskOnFailedTests: false
         testRunTitle: 'Trivy - Old Python image Vulnerabilities'
@@ -73,7 +75,7 @@ stages:
       displayName: "Publish tests from the latest Python image"
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: "$(Build.SourcesDirectory)/dockerFiles/junit-report-PythonLatest.xml"
+        testResultsFiles: "$(Build.SourcesDirectory)/junit-report-PythonLatest.xml"
         mergeTestResults: true
         failTaskOnFailedTests: true
         testRunTitle: 'Trivy - Latest Python image  Vulnerabilities'
