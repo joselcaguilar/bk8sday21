@@ -45,7 +45,7 @@ stages:
             --severity low,medium,high,CRITICAL \
             --format template \
             --template "@templates/junit.tpl" \
-            -o "$(Build.SourcesDirectory)/junit-report-PythonOld.xml" image $(imageName):3.4-$(Build.BuildNumber)
+            -o junit-report-PythonOld.xml $(imageName):3.4-$(Build.BuildNumber)
 
     - task: CmdLine@2
       displayName: "Run trivy scan for latest Python image"
@@ -57,8 +57,7 @@ stages:
             --severity low,medium,high,CRITICAL \
             --format template \
             --template "@templates/junit.tpl" \
-            -o "$(Build.SourcesDirectory)/junit-report-PythonLatest.xml" image $(imageName):latest-$(Build.BuildNumber)
-            ls
+            -o junit-report-PythonLatest.xml $(imageName):latest-$(Build.BuildNumber)
 
     - task: PublishTestResults@2
       displayName: "Publish tests from the Python v3.4 image"
