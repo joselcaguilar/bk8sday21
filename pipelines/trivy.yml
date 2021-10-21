@@ -41,6 +41,7 @@ stages:
         workingDirectory: $(Build.SourcesDirectory)
         script: |
           wget https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/junit.tpl
+      enabled: false
 
     - task: CmdLine@2
       displayName: "Run trivy scan for Python 3.4 image"
@@ -51,7 +52,7 @@ stages:
             --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/aquasecurity/trivy:$(trivyVersion) \
             --severity low,medium,high,CRITICAL \
             --format template \
-            --template junit.tpl \
+            --template "@contrib/junit.tpl" \
             -o junit-report-PythonOld.xml $(imageName):3.4-$(Build.BuildNumber)
 
     - task: CmdLine@2
@@ -63,7 +64,7 @@ stages:
             --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/aquasecurity/trivy:$(trivyVersion) \
             --severity low,medium,high,CRITICAL \
             --format template \
-            --template junit.tpl \
+            --template "@contrib/junit.tpl" \
             -o junit-report-PythonLatest.xml $(imageName):latest-$(Build.BuildNumber)
 
     - task: PublishTestResults@2
