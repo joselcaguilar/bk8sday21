@@ -36,14 +36,6 @@ stages:
             docker build -t $(imageName):latest-$(Build.BuildNumber) -f dockerFile .
 
     - task: CmdLine@2
-      displayName: "Download trivy junit template"
-      inputs:
-        workingDirectory: $(Build.SourcesDirectory)
-        script: |
-          wget https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/junit.tpl
-      enabled: false
-
-    - task: CmdLine@2
       displayName: "Run trivy scan for Python 3.4 image"
       inputs:
         workingDirectory: $(Build.SourcesDirectory)
@@ -53,7 +45,7 @@ stages:
             --severity low,medium,high,CRITICAL \
             --format template \
             --template "@contrib/junit.tpl" \
-            -o junit-report-PythonOld.xml $(imageName):3.4-$(Build.BuildNumber)
+            -o junit-report-PythonOld.xml image $(imageName):3.4-$(Build.BuildNumber)
 
     - task: CmdLine@2
       displayName: "Run trivy scan for latest Python image"
@@ -65,7 +57,7 @@ stages:
             --severity low,medium,high,CRITICAL \
             --format template \
             --template "@contrib/junit.tpl" \
-            -o junit-report-PythonLatest.xml $(imageName):latest-$(Build.BuildNumber)
+            -o junit-report-PythonLatest.xml image $(imageName):latest-$(Build.BuildNumber)
 
     - task: PublishTestResults@2
       displayName: "Publish tests from the Python v3.4 image"
