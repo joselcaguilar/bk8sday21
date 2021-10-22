@@ -7,6 +7,8 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
+  acrServiceConnection: BK8SDayACR
+  acrEndpoint: bk8sday.azurecr.io
   imageName: python
   trivyVersion: 0.20.1
 
@@ -84,12 +86,35 @@ stages:
         failTaskOnFailedTests: true
         testRunTitle: 'Trivy - Old Python image Vulnerabilities'
 
+    - task: Docker@2
+      inputs:
+        containerRegistry: $(acrServiceConnection)
+        command: login
+      displayName: Connect to the ACR
+      condition: 'always()'
+  
+    - task: CmdLine@2
+      displayName: Docker tag and push the Python v3.4 image to the ACR
+      inputs:
+        script: |          
+          docker tag "$(imageName):3.4-$(Build.BuildNumber)" "$(acrEndpoint)/bk8sday/$(imageName):3.4-$(Build.BuildNumber)"
+
+          docker push $(acrEndpoint)/bk8sday/$(imageName):3.4-$(Build.BuildNumber)
+
     - task: PublishTestResults@2
       displayName: "Publish tests from the latest Python image"
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: "$(Build.SourcesDirectory)/junit-report-PythonLatest.xml"
         mergeTestResults: false
-        failTaskOnFailedTests: true
+        failTaskOnFailedTests: false
         testRunTitle: 'Trivy - Latest Python image  Vulnerabilities'
       condition: 'always()'
+
+    - task: CmdLine@2
+      displayName: Docker tag and push the latest Python image to the ACR
+      inputs:
+        script: |          
+          docker tag "$(imageName):latest-$(Build.BuildNumber)" "$(acrEndpoint)/bk8sday/$(imageName):latest-$(Build.BuildNumber)"
+
+          docker push $(acrEndpoint)/bk8sday/$(imageName):latest-$(Build.BuildNumber)
