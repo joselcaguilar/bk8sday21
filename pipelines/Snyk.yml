@@ -35,7 +35,7 @@ stages:
         dockerImageName: $(imageName):3.4-$(Build.BuildNumber)
         severityThreshold: 'medium'
         monitorWhen: 'never'
-        additionalArguments: --json-file-output=$(Build.SourcesDirectory)/json-SnykReport-PythonOld.json
+        additionalArguments: --json-file-output=$(Build.SourcesDirectory)/SnykReport-PythonOld.json
         failOnIssues: false
 
     - task: CmdLine@2
@@ -53,32 +53,23 @@ stages:
         dockerImageName: $(imageName):latest-$(Build.BuildNumber)
         severityThreshold: 'medium'
         monitorWhen: 'never'
-        additionalArguments: --json-file-output=$(Build.SourcesDirectory)/json-SnykReport-PythonLatest.json
+        additionalArguments: --json-file-output=$(Build.SourcesDirectory)/SnykReport-PythonLatest.json
         failOnIssues: false
 
     - task: CmdLine@2
-      displayName: Transform both tests to JUnit format
+      displayName: Transform both tests to HTML
       inputs:
         workingDirectory: $(Build.SourcesDirectory)
         script: |
-          mkdir JUnitReports
-          npm install --save-dev json-to-junit@latest
-          $(Build.SourcesDirectory)/../../node_modules/.bin/jsonjunit --json $(Build.SourcesDirectory) --junit $(Build.SourcesDirectory)/JUnitReports
+          mkdir HTML && cd HTML
+          npm install snyk-to-html -g
+          snyk-to-html -o SnykReport-PythonOld.html
+          snyk-to-html -o SnykReport-PythonLatest.html
 
-    - task: PublishTestResults@2
-      displayName: "Publish tests from the Python v3.4 image"
+    - task: PublishBuildArtifacts@1
+      displayName: Publish HTML reports as artifacts
       inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: "$(Build.SourcesDirectory)/JUnitReports/junit-SnykReport-PythonOld.xml"
-        mergeTestResults: false
-        failTaskOnFailedTests: true
-        testRunTitle: 'Snyk - Old Python image Vulnerabilities'
-
-    - task: PublishTestResults@2
-      displayName: "Publish tests from the Python v3.4 image"
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: "$(Build.SourcesDirectory)/JUnitReports/junit-SnykReport-PythonLatest.xml"
-        mergeTestResults: false
-        failTaskOnFailedTests: true
-        testRunTitle: 'Snyk - Latest Python image Vulnerabilities'
+        pathToPublish: '$(Build.SourcesDirectory)/HTML' 
+        artifactName: 'htmlReports' 
+        publishLocation: 'Container'
+        parallel: true
