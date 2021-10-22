@@ -34,7 +34,7 @@ stages:
         testType: 'container'
         dockerImageName: $(imageName):3.4-$(Build.BuildNumber)
         severityThreshold: 'medium'
-        monitorWhen: 'always'
+        monitorWhen: 'never'
         additionalArguments: --json-file-output=$(Build.SourcesDirectory)/json-SnykReport-PythonOld.json
         failOnIssues: false
 
@@ -52,7 +52,7 @@ stages:
         testType: 'container'
         dockerImageName: $(imageName):latest-$(Build.BuildNumber)
         severityThreshold: 'medium'
-        monitorWhen: 'always'
+        monitorWhen: 'never'
         additionalArguments: --json-file-output=$(Build.SourcesDirectory)/json-SnykReport-PythonLatest.json
         failOnIssues: false
 
