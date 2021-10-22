@@ -1,7 +1,6 @@
 trigger:
 - develop
 - main
-- publish
 
 pool:
   vmImage: ubuntu-latest
@@ -107,7 +106,7 @@ stages:
         testResultsFiles: "$(Build.SourcesDirectory)/junit-report-PythonLatest.xml"
         mergeTestResults: false
         failTaskOnFailedTests: false
-        testRunTitle: 'Trivy - Latest Python image  Vulnerabilities'
+        testRunTitle: 'Trivy - Latest Python image Vulnerabilities'
       condition: 'not(canceled())'
 
     - task: CmdLine@2
