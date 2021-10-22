@@ -63,8 +63,8 @@ stages:
         script: |
           mkdir HTML && cd HTML
           npm install snyk-to-html -g
-          snyk-to-html -o SnykReport-PythonOld.html
-          snyk-to-html -o SnykReport-PythonLatest.html
+          snyk-to-html -i $(Build.SourcesDirectory)/SnykReport-PythonOld.json -o SnykReport-PythonOld.html
+          snyk-to-html -i $(Build.SourcesDirectory)/SnykReport-PythonLatest.json -o SnykReport-PythonLatest.html
 
     - task: PublishBuildArtifacts@1
       displayName: Publish HTML reports as artifacts
