@@ -37,7 +37,7 @@ stages:
     - task: SnykSecurityScan@1
       displayName: Scan the Python v3.4 image with Snyk
       inputs:
-        ConnectionEndpoint: 'Snyk-josunefon'
+        serviceConnectionEndpoint: 'Snyk-josunefon'
         testType: 'container'
         dockerImageName: $(imageName):3.4-$(Build.BuildNumber)
         severityThreshold: 'medium'
