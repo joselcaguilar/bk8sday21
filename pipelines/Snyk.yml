@@ -74,14 +74,14 @@ stages:
         failTaskOnFailedTests: true
         testRunTitle: 'Trivy - Old Python image Snyk Vulnerabilities'
 
-      - task: PublishTestResults@2
-        displayName: "Publish tests from the Python v3.4 image"
-        inputs:
-          testResultsFormat: 'JUnit'
-          testResultsFiles: "$(Build.SourcesDirectory)/junit-SnykReport-PythonLatest.xml"
-          mergeTestResults: false
-          failTaskOnFailedTests: true
-          testRunTitle: 'Trivy - Latest Python image Snyk Vulnerabilities'
+    - task: PublishTestResults@2
+      displayName: "Publish tests from the Python v3.4 image"
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: "$(Build.SourcesDirectory)/junit-SnykReport-PythonLatest.xml"
+        mergeTestResults: false
+        failTaskOnFailedTests: true
+        testRunTitle: 'Trivy - Latest Python image Snyk Vulnerabilities'
 
     - task: CmdLine@2
       displayName: Scan the Python latest image with Snyk
