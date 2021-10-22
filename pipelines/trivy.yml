@@ -48,6 +48,13 @@ stages:
             -o "/root/junit-report-PythonOld.xml" \
             $(imageName):3.4-$(Build.BuildNumber)
 
+            echo "##[debug] Showing the output in plain text"
+
+            docker run \
+            --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME:/root/.cache/ ghcr.io/aquasecurity/trivy:$(trivyVersion) \
+            --severity LOW,MEDIUM,HIGH,CRITICAL \
+            $(imageName):3.4-$(Build.BuildNumber)
+
     - task: CmdLine@2
       displayName: "Run trivy scan for latest Python image"
       inputs:
@@ -59,6 +66,13 @@ stages:
             --format template \
             --template "@contrib/junit.tpl" \
             -o "/root/junit-report-PythonLatest.xml" \
+            $(imageName):latest-$(Build.BuildNumber)
+
+            echo "##[debug] Showing the output in plain text"
+
+            docker run \
+            --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME:/root/.cache/ ghcr.io/aquasecurity/trivy:$(trivyVersion) \
+            --severity LOW,MEDIUM,HIGH,CRITICAL \
             $(imageName):latest-$(Build.BuildNumber)
 
     - task: PublishTestResults@2
