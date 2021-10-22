@@ -61,15 +61,15 @@ stages:
       inputs:
         workingDirectory: $(Build.SourcesDirectory)
         script: |
-            npm install --save-dev json-to-junit@latest
-            $(Build.SourcesDirectory)/../../node_modules/.bin/jsonjunit --json $(Build.SourcesDirectory)/json-SnykReport-PythonOld.json --junit $(Build.SourcesDirectory)/junit-SnykReport-PythonOld.xml
-            $(Build.SourcesDirectory)/../../node_modules/.bin/jsonjunit --json $(Build.SourcesDirectory)/json-SnykReport-PythonLatest.json --junit $(Build.SourcesDirectory)/junit-SnykReport-PythonLatest.xml
+          mkdir JUnitReports
+          npm install --save-dev json-to-junit@latest
+          $(Build.SourcesDirectory)/../../node_modules/.bin/jsonjunit --json $(Build.SourcesDirectory) --junit $(Build.SourcesDirectory)/JUnitReports
 
     - task: PublishTestResults@2
       displayName: "Publish tests from the Python v3.4 image"
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: "$(Build.SourcesDirectory)/junit-SnykReport-PythonOld.xml"
+        testResultsFiles: "$(Build.SourcesDirectory)/JUnitReports/junit-SnykReport-PythonOld.xml"
         mergeTestResults: false
         failTaskOnFailedTests: true
         testRunTitle: 'Snyk - Old Python image Vulnerabilities'
@@ -78,7 +78,7 @@ stages:
       displayName: "Publish tests from the Python v3.4 image"
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: "$(Build.SourcesDirectory)/junit-SnykReport-PythonLatest.xml"
+        testResultsFiles: "$(Build.SourcesDirectory)/JUnitReports/junit-SnykReport-PythonLatest.xml"
         mergeTestResults: false
         failTaskOnFailedTests: true
         testRunTitle: 'Snyk - Latest Python image Vulnerabilities'
