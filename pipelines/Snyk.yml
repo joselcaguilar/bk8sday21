@@ -62,8 +62,8 @@ stages:
         workingDirectory: $(Build.SourcesDirectory)
         script: |
             npm install --save-dev json-to-junit@latest
-            $(Build.SourcesDirectory)/node_modules/.bin/jsonjunit --json $(Build.SourcesDirectory)/json-SnykReport-PythonOld.json --junit $(Build.SourcesDirectory)/junit-SnykReport-PythonOld.xml
-            $(Build.SourcesDirectory)/node_modules/.bin/jsonjunit --json $(Build.SourcesDirectory)/json-SnykReport-PythonLatest.json --junit $(Build.SourcesDirectory)/junit-SnykReport-PythonLatest.xml
+            $(Build.SourcesDirectory)/../../node_modules/.bin/jsonjunit --json $(Build.SourcesDirectory)/json-SnykReport-PythonOld.json --junit $(Build.SourcesDirectory)/junit-SnykReport-PythonOld.xml
+            $(Build.SourcesDirectory)/../../node_modules/.bin/jsonjunit --json $(Build.SourcesDirectory)/json-SnykReport-PythonLatest.json --junit $(Build.SourcesDirectory)/junit-SnykReport-PythonLatest.xml
 
     - task: PublishTestResults@2
       displayName: "Publish tests from the Python v3.4 image"
