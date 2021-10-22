@@ -1,7 +1,6 @@
 trigger:
 - develop
 - main
-- publish
 
 pool:
   vmImage: ubuntu-latest
@@ -34,6 +33,16 @@ stages:
         workingDirectory: $(Build.SourcesDirectory)/dockerFiles
         script: |
             docker build -t $(imageName):latest-$(Build.BuildNumber) -f dockerFile .
+
+    - task: SnykSecurityScan@1
+      displayName: Scan the Python v3.4 image with Snyk
+      inputs:
+        ConnectionEndpoint: 'Snyk-josunefon'
+        testType: 'container'
+        dockerImageName: $(imageName):3.4-$(Build.BuildNumber)
+        severityThreshold: 'medium'
+        monitorWhen: 'always'
+        failOnIssues: false
 
     - task: CmdLine@2
       displayName: Scan the Python v3.4 image with Snyk
