@@ -61,7 +61,7 @@ stages:
       inputs:
         workingDirectory: $(Build.SourcesDirectory)
         script: |
-            npm install --save-dev jsonjunit
+            npm install --save-dev json-to-junit@latest
             node_modules/.bin/jsonjunit --json $(Build.SourcesDirectory)/json-SnykReport-PythonOld.json --junit $(Build.SourcesDirectory)/junit-SnykReport-PythonOld.xml
             node_modules/.bin/jsonjunit --json $(Build.SourcesDirectory)/json-SnykReport-PythonLatest.json --junit $(Build.SourcesDirectory)/junit-SnykReport-PythonLatest.xml
 
@@ -82,14 +82,3 @@ stages:
         mergeTestResults: false
         failTaskOnFailedTests: true
         testRunTitle: 'Snyk - Latest Python image Vulnerabilities'
-
-    - task: CmdLine@2
-      displayName: Scan the Python latest image with Snyk
-      inputs:
-        workingDirectory: $(Build.SourcesDirectory)/dockerFiles
-        script: |
-            wget https://github.com/docker/scan-cli-plugin/releases/download/v0.8.0/docker-scan_linux_amd64
-            chmod +x docker-scan_linux_amd64
-            ./docker-scan_linux_amd64 scan --login --token $(SNYK_API_TOKEN) --accept-license
-            ./docker-scan_linux_amd64 scan $(imageName):latest-$(Build.BuildNumber) --accept-license || exit 0
-      enabled: false
