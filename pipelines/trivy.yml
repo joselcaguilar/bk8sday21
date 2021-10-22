@@ -23,6 +23,12 @@ stages:
     steps:
     - checkout: self
 
+    - task: Docker@2
+      inputs:
+        containerRegistry: $(acrServiceConnection)
+        command: login
+      displayName: Connect to the ACR
+
     - task: CmdLine@2
       displayName: Build the Python v3.4 image
       inputs:
@@ -85,13 +91,6 @@ stages:
         mergeTestResults: false
         failTaskOnFailedTests: true
         testRunTitle: 'Trivy - Old Python image Vulnerabilities'
-
-    - task: Docker@2
-      inputs:
-        containerRegistry: $(acrServiceConnection)
-        command: login
-      displayName: Connect to the ACR
-      condition: 'always()'
   
     - task: CmdLine@2
       displayName: Docker tag and push the Python v3.4 image to the ACR
@@ -118,3 +117,4 @@ stages:
           docker tag "$(imageName):latest-$(Build.BuildNumber)" "$(acrEndpoint)/bk8sday/$(imageName):latest-$(Build.BuildNumber)"
 
           docker push $(acrEndpoint)/bk8sday/$(imageName):latest-$(Build.BuildNumber)
+      condition: 'SucceededNode()'
