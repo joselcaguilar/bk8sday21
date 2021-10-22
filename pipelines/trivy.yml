@@ -117,4 +117,4 @@ stages:
           docker tag "$(imageName):latest-$(Build.BuildNumber)" "$(acrEndpoint)/bk8sday/$(imageName):latest-$(Build.BuildNumber)"
 
           docker push $(acrEndpoint)/bk8sday/$(imageName):latest-$(Build.BuildNumber)
-      condition: 'Succeeded()'
+      condition: 'not(canceled()'
