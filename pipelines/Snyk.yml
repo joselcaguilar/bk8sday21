@@ -9,7 +9,6 @@ pool:
 variables:
   imageName: python
   trivyVersion: 0.20.1
-  registry: BK8SDayACR
 
 stages:
 - stage: Build
@@ -37,16 +36,6 @@ stages:
             docker build -t $(imageName):latest-$(Build.BuildNumber) -f dockerFile .
 
     - task: CmdLine@2
-      displayName: Scan the Python latest image with Snyk
-      inputs:
-        workingDirectory: $(Build.SourcesDirectory)/dockerFiles
-        script: |
-            wget https://github.com/docker/scan-cli-plugin/releases/download/v0.8.0/docker-scan_linux_amd64
-            chmod +x docker-scan_linux_amd64
-            ./docker-scan_linux_amd64 scan --login --token 'b7191e9b-e40a-431e-a71b-3d79d99a324c'  --accept-license
-            ./docker-scan_linux_amd64 scan $(imageName):latest-$(Build.BuildNumber) --accept-license || exit 0
-
-    - task: CmdLine@2
       displayName: Scan the Python v3.4 image with Snyk
       inputs:
         workingDirectory: $(Build.SourcesDirectory)/dockerFiles
@@ -56,18 +45,12 @@ stages:
             ./docker-scan_linux_amd64 scan --login --token 'b7191e9b-e40a-431e-a71b-3d79d99a324c'  --accept-license
             ./docker-scan_linux_amd64 scan $(imageName):3.4-$(Build.BuildNumber) --accept-license || exit 0
 
-    - task: Docker@2
-      displayName: Push latest image
+    - task: CmdLine@2
+      displayName: Scan the Python latest image with Snyk
       inputs:
-        containerRegistry: |
-          $(registry)
-        repository: $(imageName):latest-$(Build.BuildNumber)
-        command: push
-
-    - task: Docker@2
-      displayName: Push old image
-      inputs:
-        containerRegistry: |
-          $(registry)
-        repository: $(imageName):3.4-$(Build.BuildNumber)
-        command: push
+        workingDirectory: $(Build.SourcesDirectory)/dockerFiles
+        script: |
+            wget https://github.com/docker/scan-cli-plugin/releases/download/v0.8.0/docker-scan_linux_amd64
+            chmod +x docker-scan_linux_amd64
+            ./docker-scan_linux_amd64 scan --login --token 'b7191e9b-e40a-431e-a71b-3d79d99a324c'  --accept-license
+            ./docker-scan_linux_amd64 scan $(imageName):latest-$(Build.BuildNumber) --accept-license || exit 0
