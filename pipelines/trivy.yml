@@ -108,7 +108,7 @@ stages:
         mergeTestResults: false
         failTaskOnFailedTests: false
         testRunTitle: 'Trivy - Latest Python image  Vulnerabilities'
-      condition: 'always()'
+      condition: 'not(canceled())'
 
     - task: CmdLine@2
       displayName: Docker tag and push the latest Python image to the ACR
@@ -117,4 +117,4 @@ stages:
           docker tag "$(imageName):latest-$(Build.BuildNumber)" "$(acrEndpoint)/bk8sday/$(imageName):latest-$(Build.BuildNumber)"
 
           docker push $(acrEndpoint)/bk8sday/$(imageName):latest-$(Build.BuildNumber)
-      condition: 'not(canceled()'
+      condition: 'not(canceled())'
