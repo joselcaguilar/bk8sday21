@@ -1,0 +1,49 @@
+name: 'DefenderScan'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  defender:
+    name: 'Defender'
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    # Checkout the repository to the GitHub Actions runner
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      
+    - uses: azure/docker-login@v1
+      with:
+        login-server: bk8sday.azurecr.io
+        username: BK8SDAY
+        password: ${{ secrets.ACRPASSWORD }}
+   
+    - name: Docker build
+      working-directory: ./dockerFiles
+      run: |
+        docker build -t python:3.4-${{ github.run_number }} -f dockerFileOld .
+        docker tag "python:3.4-${{ github.run_number }}" "bk8sday.azurecr.io/bk8sday/python:3.4-${{ github.run_number }}"
+        
+    - uses: Azure/container-scan@v0 
+      name: Scan image for vulnerabilities
+      id: container-scan
+      continue-on-error: true
+      with:
+        image-name: bk8sday.azurecr.io/bk8sday/python:3.4-${{ github.run_number }}
+
+    - name: Push Docker image
+      run: |
+      docker push bk8sday.azurecr.io/bk8sday/python:3.4-${{ github.run_number }}
+
+    - name: Post logs to appinsights
+      uses: Azure/publish-security-assessments@v0
+      with: 
+        scan-results-path: ${{ steps.container-scan.outputs.scan-report-path }}
+        connection-string: ${{ secrets.AZ_APPINSIGHTS_CONNECTION_STRING }}
+        subscription-token: ${{ secrets.AZ_SUBSCRIPTION_TOKEN }}
