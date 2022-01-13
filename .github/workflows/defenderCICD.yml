@@ -39,7 +39,7 @@ jobs:
 
     - name: Push Docker image
       run: |
-      docker push bk8sday.azurecr.io/bk8sday/python:3.4-${{ github.run_number }}
+        docker push bk8sday.azurecr.io/bk8sday/python:3.4-${{ github.run_number }}
 
     - name: Post logs to appinsights
       uses: Azure/publish-security-assessments@v0
